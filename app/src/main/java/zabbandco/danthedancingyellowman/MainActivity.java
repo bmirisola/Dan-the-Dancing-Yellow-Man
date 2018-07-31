@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import util.Constants;
+
+
 // <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string> - test
 // <string name="banner_ad_unit_id">ca-app-pub-9744674999881322/4453831094</string> - real bottom
 
@@ -35,7 +38,7 @@ public class MainActivity extends Activity {
     protected void onStart() {
         super.onStart();
         if(Dan.counter != 0){
-            dancer.setImageResource(danImgs.getResourceId(Dan.counter, 0));
+            dancer.setImageResource(danImgs.getResourceId(Dan.counter, Constants.defaultImageValue));
         }
     }
 
