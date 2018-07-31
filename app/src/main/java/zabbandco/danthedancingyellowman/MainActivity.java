@@ -28,13 +28,34 @@ import com.google.android.gms.ads.MobileAds;
 // <string name="banner_ad_unit_id">ca-app-pub-9744674999881322/4453831094</string> - real bottom
 
 public class MainActivity extends Activity {
-
+    Button danceButton;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        //danceButton = new Button(R.id.)
+    }
+
+    protected void onStart() {
+
+        super.onStart();
+    }
+
+    protected void onResume() {
+        super.onResume();
+    }
+
+    protected void onPause(){
+        super.onPause();
+    }
+
+    protected void onStop(){
+        super.onStop();
+    }
+
+    protected void onDestroy(){
+        super.onDestroy();
     }
 }
