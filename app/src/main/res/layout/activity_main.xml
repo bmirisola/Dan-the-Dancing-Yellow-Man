@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/dan"
         android:layout_centerHorizontal="true"
-        android:text="Make Dan Dance" />
+        android:text="@string/make_dan_dance" />
 
     <Button
         android:id="@+id/dan_friends_button"
@@ -41,7 +41,7 @@
         android:layout_below="@+id/dance_button"
         android:layout_marginTop="27dp"
         android:background="#000000"
-        android:text="Dan your friends, and show them how cool you are! (Click here!!!) "
+        android:text="@string/dan_your_friends_and_show_them_how_cool_you_are_click_here"
         android:textColor="#f1e6ff01" />
 
     <TextView
