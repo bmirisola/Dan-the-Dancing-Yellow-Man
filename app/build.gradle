@@ -1,12 +1,17 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
+    signingConfigs {
+        test {
+            keyAlias 'test'
+            keyPassword 'marshmallow328'
+        }
+    }
+    compileSdkVersion 27
     buildToolsVersion "27.0.3"
-
     defaultConfig {
         applicationId "zabbandco.danthedancingyellowman"
-        minSdkVersion 9
+        minSdkVersion 14
         targetSdkVersion 27
         versionCode 7
         versionName "1.7"
@@ -20,8 +25,21 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
-    implementation 'com.android.support:appcompat-v7:23.0.1'
-    implementation 'com.google.android.gms:play-services-ads:8.1.0'
+    //noinspection GradleCompatible
+    implementation 'com.android.support:appcompat-v7:26.0.1'
+    implementation 'com.google.android.gms:play-services-ads:15.0.0'
+
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion '26.0.1'
+            }
+        }
+    }
 }
