@@ -44,7 +44,9 @@ public class MainActivity extends Activity {
 
     protected void onResume() {
         super.onResume();
-    }
+        if(Dan.counter != 0){
+            dancer.setImageResource(danImgs.getResourceId(Dan.counter, Constants.defaultImageValue));
+        }    }
 
     protected void onPause() {
         super.onPause();
@@ -56,5 +58,15 @@ public class MainActivity extends Activity {
 
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    protected void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        outState.putInt("Dance Counter", Dan.counter);
+
+    }
+
+    protected void onRestoreInstanceState(Bundle savedInstanceState){
+        super.onRestoreInstanceState(savedInstanceState);
     }
 }
