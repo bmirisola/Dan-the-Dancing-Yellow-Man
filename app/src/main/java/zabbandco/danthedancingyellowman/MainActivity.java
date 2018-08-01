@@ -3,6 +3,7 @@ package zabbandco.danthedancingyellowman;
 import android.app.Activity;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,11 +27,13 @@ public class MainActivity extends Activity {
         danceButton = findViewById(R.id.dance_button);
         danImgs = getResources().obtainTypedArray(R.array.dan_imgs);
         dancer = findViewById(R.id.dan);
+        Log.d("Oncreate", "On create counter = " + Integer.toString(Dan.counter) );
 
         danceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dan.changeDan(dancer, danImgs);
+                Dan.changeDan(dancer);
+                Log.d("Button Press", Integer.toString(Dan.counter));
             }
         });
     }
@@ -38,18 +41,25 @@ public class MainActivity extends Activity {
     protected void onStart() {
         super.onStart();
         if(Dan.counter != 0){
-            dancer.setImageResource(danImgs.getResourceId(Dan.counter, Constants.defaultImageValue));
+            //dancer.setImageResource(danImgs.getResourceId(Dan.counter, Constants.DEFAULT_IMAGE_VALUE));
         }
+        Log.d("Onstart", "On Start counter = " + Integer.toString(Dan.counter) );
+
     }
 
     protected void onResume() {
         super.onResume();
+        Log.d("OnResume", "On Resume counter = " + Integer.toString(Dan.counter) );
         if(Dan.counter != 0){
-            dancer.setImageResource(danImgs.getResourceId(Dan.counter, Constants.defaultImageValue));
-        }    }
+            //dancer.setImageResource(danImgs.getResourceId(Dan.counter, Constants.DEFAULT_IMAGE_VALUE));
+        }
+
+    }
 
     protected void onPause() {
         super.onPause();
+        Log.d("OnPause", "On Pause counter = " + Integer.toString(Dan.counter) );
+
     }
 
     protected void onStop() {
@@ -66,8 +76,11 @@ public class MainActivity extends Activity {
 
     }
 
+    @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState){
         super.onRestoreInstanceState(savedInstanceState);
         Dan.counter = savedInstanceState.getInt(Constants.DANCE_COUNTER_ID);
-    }
+        if(Dan.counter != 0){
+            //dancer.setImageResource(danImgs.getResourceId(Dan.counter, Constants.DEFAULT_IMAGE_VALUE));
+        }    }
 }

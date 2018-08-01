@@ -7,10 +7,16 @@ import util.Constants;
 
 public class Dan {
     static int counter = 0;
-    public static void changeDan(ImageView dancer, TypedArray imgs){
-        dancer.setImageResource(imgs.getResourceId(counter++, Constants.defaultImageValue));
-        if(counter == 4){
-            counter = 0;
+    public static void changeDan(ImageView dancer){
+        counter++;
+        if(counter % Constants.DAN_CYCLE_DIVISOR == 1){
+            dancer.setImageResource(R.drawable.danthemandancingleft);
+        }
+        else if (counter % Constants.DAN_CYCLE_DIVISOR == 3){
+            dancer.setImageResource(R.drawable.danthemandancingright);
+        }
+        else{
+            dancer.setImageResource(R.drawable.danthemanstanding);
         }
 
     }

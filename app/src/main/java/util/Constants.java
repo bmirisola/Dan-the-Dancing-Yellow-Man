@@ -7,7 +7,8 @@ public interface Constants {
 
 
     //ints
-    int defaultImageValue = 0;
+    int DEFAULT_IMAGE_VALUE = 0;
+    int DAN_CYCLE_DIVISOR = 4;
 
     //Strings
     String DANCE_COUNTER_ID = "Dance Counter";

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer-array name="dan_imgs">
-        <item>@drawable/danthemandancingleft</item>
         <item>@drawable/danthemanstanding</item>
+        <item>@drawable/danthemandancingleft</item>
         <item>@drawable/danthemandancingright</item>
         <item>@drawable/danthemanstanding</item>
     </integer-array>
