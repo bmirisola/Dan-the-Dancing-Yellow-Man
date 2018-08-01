@@ -2,14 +2,19 @@ package zabbandco.danthedancingyellowman;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import util.Constants;
 
@@ -19,11 +24,13 @@ import util.Constants;
 
 public class MainActivity extends Activity {
     private Button danceButton;
+    private Button danYourFriendsButton;
     private ImageView dancer;
     private TextView danPointsText;
     private int danPoints;
-    SharedPreferences preferences;
-    SharedPreferences.Editor editor;
+    private final int REQUEST_CODE_CONTACTS = 99;
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
 
 
     @Override
@@ -31,6 +38,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         danceButton = findViewById(R.id.dance_button);
+        danYourFriendsButton = findViewById(R.id.dan_friends_button);
         dancer = findViewById(R.id.dan);
         danPointsText = findViewById(R.id.danpoints);
 
@@ -46,7 +54,7 @@ public class MainActivity extends Activity {
         danPointsText.setText(String.format("Your Dan Points: %d", danPoints));
 
 
-        Log.d("Oncreate", "On create counter = " + Integer.toString(Dancer.counter) );
+        Log.d("Oncreate", "On create counter = " + Integer.toString(Dancer.counter));
 
         danceButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,18 +65,26 @@ public class MainActivity extends Activity {
                 Log.d("Button Press", Integer.toString(Dancer.counter));
             }
         });
+
+        danYourFriendsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                startActivityForResult(intent, REQUEST_CODE_CONTACTS);
+            }
+        });
     }
 
     protected void onStart() {
         super.onStart();
 
-        Log.d("Onstart", "On Start counter = " + Integer.toString(Dancer.counter) );
+        Log.d("Onstart", "On Start counter = " + Integer.toString(Dancer.counter));
 
     }
 
     protected void onResume() {
         super.onResume();
-        Log.d("OnResume", "On Resume counter = " + Integer.toString(Dancer.counter) );
+        Log.d("OnResume", "On Resume counter = " + Integer.toString(Dancer.counter));
 
     }
 
@@ -76,7 +92,7 @@ public class MainActivity extends Activity {
         super.onPause();
         editor.putInt(Constants.DAN_POINTS_KEY, danPoints);
         editor.commit();
-        Log.d("OnPause", "On Pause counter = " + Integer.toString(Dancer.counter) );
+        Log.d("OnPause", "On Pause counter = " + Integer.toString(Dancer.counter));
 
     }
 
@@ -92,15 +108,40 @@ public class MainActivity extends Activity {
         editor.commit();
     }
 
-    protected void onSaveInstanceState(Bundle outState){
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(Constants.DANCE_COUNTER_ID, Dancer.counter);
 
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState){
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         Dancer.counter = savedInstanceState.getInt(Constants.DANCE_COUNTER_ID);
+    }
+
+    @Override
+    public void onActivityResult(int reqCode, int resultCode, Intent data) {
+        super.onActivityResult(reqCode, resultCode, data);
+        switch (reqCode) {
+            case (REQUEST_CODE_CONTACTS):
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri contactData = data.getData();
+                    Cursor c = getContentResolver().query(contactData, null, null, null, null);
+                    if (c.moveToFirst()) {
+                        String contactId = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
+                        String hasNumber = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+                        String num = "";
+                        if (Integer.valueOf(hasNumber) == 1) {
+                            Cursor numbers = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
+                            while (numbers.moveToNext()) {
+                                num = numbers.getString(numbers.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                                Toast.makeText(MainActivity.this, "Number=" + num, Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+                    break;
+                }
+        }
     }
 }
