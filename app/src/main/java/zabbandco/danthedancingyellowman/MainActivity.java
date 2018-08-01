@@ -16,7 +16,6 @@ import util.Constants;
 
 public class MainActivity extends Activity {
     private Button danceButton;
-    private TypedArray danImgs;
     ImageView dancer;
 
 
@@ -25,7 +24,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         danceButton = findViewById(R.id.dance_button);
-        danImgs = getResources().obtainTypedArray(R.array.dan_imgs);
         dancer = findViewById(R.id.dan);
         Log.d("Oncreate", "On create counter = " + Integer.toString(Dan.counter) );
 
@@ -40,9 +38,7 @@ public class MainActivity extends Activity {
 
     protected void onStart() {
         super.onStart();
-        if(Dan.counter != 0){
-            //dancer.setImageResource(danImgs.getResourceId(Dan.counter, Constants.DEFAULT_IMAGE_VALUE));
-        }
+
         Log.d("Onstart", "On Start counter = " + Integer.toString(Dan.counter) );
 
     }
@@ -50,9 +46,6 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         Log.d("OnResume", "On Resume counter = " + Integer.toString(Dan.counter) );
-        if(Dan.counter != 0){
-            //dancer.setImageResource(danImgs.getResourceId(Dan.counter, Constants.DEFAULT_IMAGE_VALUE));
-        }
 
     }
 
@@ -80,7 +73,5 @@ public class MainActivity extends Activity {
     protected void onRestoreInstanceState(Bundle savedInstanceState){
         super.onRestoreInstanceState(savedInstanceState);
         Dan.counter = savedInstanceState.getInt(Constants.DANCE_COUNTER_ID);
-        if(Dan.counter != 0){
-            //dancer.setImageResource(danImgs.getResourceId(Dan.counter, Constants.DEFAULT_IMAGE_VALUE));
-        }    }
+    }
 }
