@@ -12,4 +12,5 @@ public interface Constants {
 
     //Strings
     String DANCE_COUNTER_ID = "Dance Counter";
+    String DAN_POINTS_KEY = "Dan Points";
 }

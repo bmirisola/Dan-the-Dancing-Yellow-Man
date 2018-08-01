@@ -18,7 +18,6 @@
         android:id="@+id/dan"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="98dp"
         android:contentDescription="@string/Dan"
@@ -44,15 +43,6 @@
         android:text="@string/dan_your_friends_and_show_them_how_cool_you_are_click_here"
         android:textColor="#f1e6ff01" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="1px"
-        android:layout_height="1px"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:text="Small Text"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/bottom_ad_banner"
@@ -69,7 +59,6 @@
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/dance_button"
         android:layout_alignRight="@+id/dance_button"
-        android:layout_below="@+id/textView"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#fdf003" />
 
