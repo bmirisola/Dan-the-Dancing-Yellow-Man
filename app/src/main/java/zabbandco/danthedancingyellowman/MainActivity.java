@@ -62,11 +62,12 @@ public class MainActivity extends Activity {
 
     protected void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
-        outState.putInt("Dance Counter", Dan.counter);
+        outState.putInt(Constants.DANCE_COUNTER_ID, Dan.counter);
 
     }
 
     protected void onRestoreInstanceState(Bundle savedInstanceState){
         super.onRestoreInstanceState(savedInstanceState);
+        Dan.counter = savedInstanceState.getInt(Constants.DANCE_COUNTER_ID);
     }
 }

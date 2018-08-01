@@ -8,4 +8,7 @@ public interface Constants {
 
     //ints
     int defaultImageValue = 0;
+
+    //Strings
+    String DANCE_COUNTER_ID = "Dance Counter";
 }
