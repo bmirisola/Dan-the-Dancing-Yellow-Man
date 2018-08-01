@@ -1,8 +1,9 @@
 package zabbandco.danthedancingyellowman;
 
+import android.Manifest;
 import android.app.Activity;
-import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,7 @@ import util.Constants;
 public class MainActivity extends Activity {
     private Button danceButton;
     ImageView dancer;
+    static int danPoints;
 
 
     @Override
@@ -25,13 +27,15 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         danceButton = findViewById(R.id.dance_button);
         dancer = findViewById(R.id.dan);
-        Log.d("Oncreate", "On create counter = " + Integer.toString(Dan.counter) );
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        Log.d("Oncreate", "On create counter = " + Integer.toString(Dancer.counter) );
 
         danceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dan.changeDan(dancer);
-                Log.d("Button Press", Integer.toString(Dan.counter));
+                Dancer.changeDan(dancer);
+                Log.d("Button Press", Integer.toString(Dancer.counter));
             }
         });
     }
@@ -39,19 +43,19 @@ public class MainActivity extends Activity {
     protected void onStart() {
         super.onStart();
 
-        Log.d("Onstart", "On Start counter = " + Integer.toString(Dan.counter) );
+        Log.d("Onstart", "On Start counter = " + Integer.toString(Dancer.counter) );
 
     }
 
     protected void onResume() {
         super.onResume();
-        Log.d("OnResume", "On Resume counter = " + Integer.toString(Dan.counter) );
+        Log.d("OnResume", "On Resume counter = " + Integer.toString(Dancer.counter) );
 
     }
 
     protected void onPause() {
         super.onPause();
-        Log.d("OnPause", "On Pause counter = " + Integer.toString(Dan.counter) );
+        Log.d("OnPause", "On Pause counter = " + Integer.toString(Dancer.counter) );
 
     }
 
@@ -65,13 +69,13 @@ public class MainActivity extends Activity {
 
     protected void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
-        outState.putInt(Constants.DANCE_COUNTER_ID, Dan.counter);
+        outState.putInt(Constants.DANCE_COUNTER_ID, Dancer.counter);
 
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState){
         super.onRestoreInstanceState(savedInstanceState);
-        Dan.counter = savedInstanceState.getInt(Constants.DANCE_COUNTER_ID);
+        Dancer.counter = savedInstanceState.getInt(Constants.DANCE_COUNTER_ID);
     }
 }

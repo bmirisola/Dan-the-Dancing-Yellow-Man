@@ -5,8 +5,10 @@ import android.widget.ImageView;
 
 import util.Constants;
 
-public class Dan {
+public class Dancer {
     static int counter = 0;
+
+    //Cycles through pictures of Dan
     public static void changeDan(ImageView dancer){
         counter++;
         if(counter % Constants.DAN_CYCLE_DIVISOR == 1){
