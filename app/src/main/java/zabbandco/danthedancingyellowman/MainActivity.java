@@ -21,6 +21,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import util.Constants;
 
 
@@ -34,10 +38,11 @@ public class MainActivity extends Activity {
     private TextView danPointsText;
     SmsManager smsManager;
     MediaPlayer umph;
+    AdRequest adRequest;
+    private AdView bottomBanner;
     private int danPoints;
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +50,19 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setVolumeControlStream(Constants.STREAM_MUSIC);
+        MobileAds.initialize(this, getString(R.string.app_admob_id));
         danceButton = findViewById(R.id.dance_button);
         danYourFriendsButton = findViewById(R.id.dan_friends_button);
         dancer = findViewById(R.id.dan);
         danPointsText = findViewById(R.id.danpoints);
         smsManager = SmsManager.getDefault();
         umph = MediaPlayer.create(this, R.raw.cutumph);
+        bottomBanner = findViewById(R.id.adView_Banner_Bottom);
+        adRequest = new AdRequest.Builder().build();
+
+        bottomBanner.loadAd(adRequest);
 
 
-        //Permissions
-        //ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
 
         //Shared preferences
         preferences = getPreferences(MODE_PRIVATE);

@@ -1,10 +1,11 @@
 <resources>
     <string name="app_name">Dan the Dancing Yellow Man</string>
     <string name="Dan">Dan!</string>
-    <string name="banner_ad_unit_id">ca-app-pub-9744674999881322/4453831094</string>
+    <string name="banner_ad_unit_id">ca-app-pub-9744674999881322/4188774607</string>
     <string name="dan_points_text">Your dan points</string>
     <string name="dan_your_friends_and_show_them_how_cool_you_are_click_here">Dan your friends, and show them how cool you are! (Click here!!!)</string>
     <string name="make_dan_dance">Make Dan Dance</string>
     <string name="contact_and_sms_permission_request">This will allow you to Dan your friends via a text message. Denying will permanantly lock you out</string>
+    <string name="app_admob_id">ca-app-pub-9744674999881322~1500364691</string>
 </resources>
 

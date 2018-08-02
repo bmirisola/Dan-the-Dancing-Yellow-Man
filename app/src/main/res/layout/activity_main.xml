@@ -44,15 +44,6 @@
         android:textColor="#f1e6ff01" />
 
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/bottom_ad_banner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id"></com.google.android.gms.ads.AdView>
-
     <TextView
         android:id="@+id/danpoints"
         android:layout_width="wrap_content"
@@ -61,6 +52,17 @@
         android:layout_alignRight="@+id/dance_button"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#fdf003" />
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView_Banner_Bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="visible"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id"></com.google.android.gms.ads.AdView>
+    android:layout_marginBottom="16dp" />
 
 
 </RelativeLayout>
