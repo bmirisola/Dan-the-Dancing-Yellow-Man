@@ -4,8 +4,10 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -31,6 +33,7 @@ public class MainActivity extends Activity {
     private ImageView dancer;
     private TextView danPointsText;
     SmsManager smsManager;
+    MediaPlayer umph;
     private int danPoints;
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
@@ -40,15 +43,18 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setVolumeControlStream(Constants.STREAM_MUSIC);
         danceButton = findViewById(R.id.dance_button);
         danYourFriendsButton = findViewById(R.id.dan_friends_button);
         dancer = findViewById(R.id.dan);
         danPointsText = findViewById(R.id.danpoints);
         smsManager = SmsManager.getDefault();
+        umph = MediaPlayer.create(this, R.raw.cutumph);
+
 
         //Permissions
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        //ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
 
         //Shared preferences
         preferences = getPreferences(MODE_PRIVATE);
@@ -64,6 +70,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Dancer.changeDan(dancer);
+                umph.start();
                 danPoints++;
                 danPointsText.setText(String.format("Your Dan Points: %d", danPoints));
                 Log.d("Button Press", Integer.toString(Dancer.counter));
@@ -160,12 +167,7 @@ public class MainActivity extends Activity {
                             smsManager.sendTextMessage(String.valueOf(phoneNumber), null, "You just got Danned! Download Dan the Dancing Yellow Man. Available on Android today!", null, null);
                             Toast.makeText(MainActivity.this, "You just Danned your friend " + Contacts.getContactName(phoneNumber, MainActivity.this) + "!", Toast.LENGTH_LONG).show();
                         }
-
-                    } else {
-
                     }
-
-
                 } else {
                     Toast.makeText(getApplicationContext(), "NO data!", Toast.LENGTH_LONG).show();
                 }
@@ -189,7 +191,7 @@ public class MainActivity extends Activity {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                     //Toast.makeText(MainActivity.this, "Permission denied to read your Contacts", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(MainActivity.this, "Permission denied to send SMS. Please allow, so that you can Dan people and be cool", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(MainActivity.this, "Permission denied to send SMS. Please allow, so that you can Dan people and be cool", Toast.LENGTH_LONG).show();
                 }
 
             }

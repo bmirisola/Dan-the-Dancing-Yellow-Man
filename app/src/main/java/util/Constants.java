@@ -9,6 +9,7 @@ public interface Constants {
     //ints
     int DEFAULT_IMAGE_VALUE = 0;
     int DAN_CYCLE_DIVISOR = 4;
+    int STREAM_MUSIC = 3;
 
     //Request IDs
     int REQUEST_CODE_CONTACTS = 99;
