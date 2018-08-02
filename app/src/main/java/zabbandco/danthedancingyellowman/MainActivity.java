@@ -158,6 +158,7 @@ public class MainActivity extends Activity {
                             int columnIndex_number = cursorNum.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
                             String phoneNumber = cursorNum.getString(columnIndex_number);
                             smsManager.sendTextMessage(String.valueOf(phoneNumber), null, "You just got Danned! Download Dan the Dancing Yellow Man. Available on Android today!", null, null);
+                            Toast.makeText(MainActivity.this, "You just Danned your friend " + Contacts.getContactName(phoneNumber, MainActivity.this) + "!", Toast.LENGTH_LONG).show();
                         }
 
                     } else {
