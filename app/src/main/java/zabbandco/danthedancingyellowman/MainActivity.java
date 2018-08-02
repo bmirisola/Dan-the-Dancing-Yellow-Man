@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +30,7 @@ public class MainActivity extends Activity {
     private Button danYourFriendsButton;
     private ImageView dancer;
     private TextView danPointsText;
+    SmsManager smsManager;
     private int danPoints;
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
@@ -42,6 +44,7 @@ public class MainActivity extends Activity {
         danYourFriendsButton = findViewById(R.id.dan_friends_button);
         dancer = findViewById(R.id.dan);
         danPointsText = findViewById(R.id.danpoints);
+        smsManager = SmsManager.getDefault();
 
         //Permissions
         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -70,65 +73,18 @@ public class MainActivity extends Activity {
         danYourFriendsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Contact Permission
-                if (ContextCompat.checkSelfPermission(MainActivity.this,
-                        Manifest.permission.READ_CONTACTS)
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.SEND_SMS)
+                        != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CONTACTS)
+                        != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE)
                         != PackageManager.PERMISSION_GRANTED) {
-
                     // Permission is not granted
-                    // Should we show an explanation?
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
-                            Manifest.permission.READ_CONTACTS)) {
-                        // Show an explanation to the user *asynchronously* -- don't block
-                        // this thread waiting for the user's response! After the user
-                        // sees the explanation, try again to request the permission.
-
-                    } else {
-                        // No explanation needed; request the permission
-                        ActivityCompat.requestPermissions(MainActivity.this,
-                                new String[]{Manifest.permission.READ_CONTACTS},
-                                Constants.REQUEST_CODE_CONTACTS);
-
-                        // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                        // app-defined int constant. The callback method gets the
-                        // result of the request.
-                    }
-                } else {
-                    // Permission has already been granted
-                    Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                    startActivityForResult(intent, Constants.REQUEST_CODE_CONTACTS);
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.SEND_SMS,
+                            Manifest.permission.READ_CONTACTS, Manifest.permission.READ_PHONE_STATE}, 1);
                 }
 
-
-                //SMS permission
-                if (ContextCompat.checkSelfPermission(MainActivity.this,
-                        Manifest.permission.SEND_SMS)
-                        != PackageManager.PERMISSION_GRANTED) {
-
-                    // Permission is not granted
-                    // Should we show an explanation?
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
-                            Manifest.permission.SEND_SMS)) {
-                        // Show an explanation to the user *asynchronously* -- don't block
-                        // this thread waiting for the user's response! After the user
-                        // sees the explanation, try again to request the permission.
-
-                    } else {
-                        // No explanation needed; request the permission
-                        ActivityCompat.requestPermissions(MainActivity.this,
-                                new String[]{Manifest.permission.SEND_SMS},
-                                Constants.REQUEST_CODE_CONTACTS);
-
-                        // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                        // app-defined int constant. The callback method gets the
-                        // result of the request.
-                    }
-                } else {
-                    // Permission has already been granted
-                    Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                    startActivityForResult(intent, Constants.REQUEST_CODE_CONTACTS);
-                }
-
+                final Uri uriContact = ContactsContract.Contacts.CONTENT_URI;
+                Intent intentPickContact = new Intent(Intent.ACTION_PICK, uriContact);
+                startActivityForResult(intentPickContact, Constants.REQUEST_CODE_CONTACTS);
 
             }
         });
@@ -180,27 +136,67 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    public void onActivityResult(int reqCode, int resultCode, Intent data) {
-        super.onActivityResult(reqCode, resultCode, data);
-        switch (reqCode) {
-            case (Constants.REQUEST_CODE_CONTACTS):
-                if (resultCode == Activity.RESULT_OK) {
-                    Uri contactData = data.getData();
-                    Cursor c = getContentResolver().query(contactData, null, null, null, null);
-                    if (c.moveToFirst()) {
-                        String contactId = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
-                        String hasNumber = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
-                        String num = "";
-                        if (Integer.valueOf(hasNumber) == 1) {
-                            Cursor numbers = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
-                            while (numbers.moveToNext()) {
-                                num = numbers.getString(numbers.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                                Toast.makeText(MainActivity.this, "Number=" + num, Toast.LENGTH_LONG).show();
-                            }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == Constants.REQUEST_CODE_CONTACTS) {
+                Uri returnUri = data.getData();
+                Cursor cursor = getContentResolver().query(returnUri, null, null, null, null);
+
+                if (cursor.moveToNext()) {
+                    int columnIndex_ID = cursor.getColumnIndex(ContactsContract.Contacts._ID);
+                    String contactID = cursor.getString(columnIndex_ID);
+
+                    int columnIndex_HASPHONENUMBER = cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER);
+                    String stringHasPhoneNumber = cursor.getString(columnIndex_HASPHONENUMBER);
+
+                    if (stringHasPhoneNumber.equalsIgnoreCase("1")) {
+                        Cursor cursorNum = getContentResolver().query(
+                                ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=" + contactID, null, null);
+
+                        //Get the first phone number
+                        if (cursorNum.moveToNext()) {
+                            int columnIndex_number = cursorNum.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                            String phoneNumber = cursorNum.getString(columnIndex_number);
+                            smsManager.sendTextMessage(String.valueOf(phoneNumber), null, "You just got Danned! Download Dan the Dancing Yellow Man. Available on Android today!", null, null);
                         }
+
+                    } else {
+
                     }
-                    break;
+
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "NO data!", Toast.LENGTH_LONG).show();
                 }
+            }
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    //Toast.makeText(MainActivity.this, "Permission denied to read your Contacts", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Permission denied to send SMS. Please allow, so that you can Dan people and be cool", Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+            return;
+        }
+
+        // other 'case' lines to check for other
+        // permissions this app might request
     }
 }
